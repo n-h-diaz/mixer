@@ -18,6 +18,7 @@ package spanner
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 
 	"cloud.google.com/go/spanner"
@@ -334,12 +335,14 @@ func (sc *SpannerClient) queryAndCollect(
 			break
 		}
 		if err != nil {
-			return fmt.Errorf("failed to fetch row: %w", err)
+			log.Println("failed to fetch row: %w", err)
+			continue
 		}
 
 		rowStruct := newStruct()
 		if err := row.ToStructLenient(rowStruct); err != nil {
-			return fmt.Errorf("failed to parse row: %w", err)
+			log.Println("failed to parse row: %w", err)
+			continue
 		}
 		withStruct(rowStruct)
 	}
